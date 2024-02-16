@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InsertUser = void 0;
+exports.FindUser = exports.ReadUsers = exports.DeleteUsers = exports.InsertUser = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 function InsertUser(user) {
@@ -18,7 +18,7 @@ function InsertUser(user) {
             data: {
                 username: user.username,
                 password: user.password,
-                email: user.password,
+                email: user.email,
                 Name: user.Name,
                 MobileNo: user.MobileNo,
             },
@@ -26,6 +26,36 @@ function InsertUser(user) {
                 Id: true,
             },
         });
+        return res.Id;
     });
 }
 exports.InsertUser = InsertUser;
+function DeleteUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield prisma.user.deleteMany();
+    });
+}
+exports.DeleteUsers = DeleteUsers;
+function ReadUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield prisma.user.findMany();
+        console.log(res);
+        return res;
+    });
+}
+exports.ReadUsers = ReadUsers;
+function FindUser(username, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const res = yield prisma.user.findFirst({
+                where: { username, password },
+                select: { Id: true },
+            });
+            if (res != undefined) {
+                return res.Id;
+            }
+        }
+        catch (e) { }
+    });
+}
+exports.FindUser = FindUser;

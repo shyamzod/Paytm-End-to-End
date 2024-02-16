@@ -7,7 +7,7 @@ export interface User {
   password: string;
   email: string;
   Name: string;
-  MobileNo: number;
+  MobileNo: string;
 }
 
 export async function InsertUser(user: User) {
@@ -15,7 +15,7 @@ export async function InsertUser(user: User) {
     data: {
       username: user.username,
       password: user.password,
-      email: user.password,
+      email: user.email,
       Name: user.Name,
       MobileNo: user.MobileNo,
     },
@@ -23,4 +23,24 @@ export async function InsertUser(user: User) {
       Id: true,
     },
   });
+  return res.Id;
+}
+export async function DeleteUsers() {
+  await prisma.user.deleteMany();
+}
+export async function ReadUsers() {
+  const res = await prisma.user.findMany();
+  console.log(res);
+  return res;
+}
+export async function FindUser(username: string, password: string) {
+  try {
+    const res = await prisma.user.findFirst({
+      where: { username, password },
+      select: { Id: true },
+    });
+    if (res != undefined) {
+      return res.Id;
+    }
+  } catch (e) {}
 }

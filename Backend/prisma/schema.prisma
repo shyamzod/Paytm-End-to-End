@@ -11,10 +11,20 @@ datasource db {
 }
 
 model User{
-  Id Int @default(autoincrement())
+  Id Int @id @default(autoincrement())
   email String @unique
   username String @unique
   Name String
   password String
-  MobileNo BigInt @unique
+  MobileNo String @unique
+}
+model Transactions{
+  TransactionId Int @unique @default(autoincrement())
+  From Int
+  To Int
+  Amount Decimal
+}
+model UserBalance{
+  UserId Int @unique
+  Amount Decimal
 }
