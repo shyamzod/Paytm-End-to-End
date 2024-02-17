@@ -14,19 +14,18 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 function InsertUser(user) {
     return __awaiter(this, void 0, void 0, function* () {
-        const res = yield prisma.user.create({
+        const resp = yield prisma.user.create({
             data: {
                 username: user.username,
                 password: user.password,
                 email: user.email.toLowerCase(),
-                Name: user.Name,
                 MobileNo: user.MobileNo,
             },
             select: {
                 Id: true,
             },
         });
-        return res.Id;
+        return resp;
     });
 }
 exports.InsertUser = InsertUser;
@@ -48,10 +47,10 @@ function FindUser(email, password) {
         try {
             const res = yield prisma.user.findFirst({
                 where: { email, password },
-                select: { Id: true },
+                select: { Id: true, username: true },
             });
             if (res != undefined) {
-                return res.Id;
+                return { Id: res.Id, username: res.username };
             }
         }
         catch (e) { }

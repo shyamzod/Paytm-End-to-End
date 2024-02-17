@@ -33,8 +33,14 @@ app.post("/signup", function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const usersignup = req.body;
-            const userid = yield (0, index_1.InsertUser)(usersignup);
-            res.send("User Signed Up Successfully with id " + userid);
+            const resp = yield (0, index_1.InsertUser)(usersignup);
+            if (resp.Id > 0) {
+                res.send({ userid: resp.Id, Message: "User Created Successfully" });
+            }
+            else {
+                console.log(resp);
+                res.send(resp);
+            }
         }
         catch (e) {
             res.send("Some Error has Occured");
@@ -47,9 +53,9 @@ app.post("/login", function (req, res) {
         let password = req.body.password;
         try {
             const resp = yield (0, index_1.FindUser)(email, password);
-            if (resp != undefined && resp > 0) {
-                var token = jwt.sign(resp, secretKey);
-                res.send({ Token: "Bearer:" + token });
+            if (resp != undefined) {
+                var token = jwt.sign(resp.Id, secretKey);
+                res.send({ Token: "Bearer:" + token, userName: resp.username });
             }
             else {
                 res.send({ Error: "User Credentials Invalid" });

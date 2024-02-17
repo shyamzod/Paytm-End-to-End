@@ -1,10 +1,8 @@
 import { InsertUser, DeleteUsers, ReadUsers, FindUser } from "./src/index";
 import express from "express";
 import { User } from "./src/index";
-
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-
 const secretKey = "pass123";
 const app = express();
 app.use(cors());
@@ -19,8 +17,13 @@ app.get("/deleteallusers", async function (req, res) {
 app.post("/signup", async function (req, res) {
   try {
     const usersignup: User = req.body;
-    const userid = await InsertUser(usersignup);
-    res.send("User Signed Up Successfully with id " + userid);
+    const resp = await InsertUser(usersignup);
+    if (resp.Id > 0) {
+      res.send({ userid: resp.Id, Message: "User Created Successfully" });
+    } else {
+      console.log(resp);
+      res.send(resp);
+    }
   } catch (e) {
     res.send("Some Error has Occured");
   }
@@ -30,9 +33,9 @@ app.post("/login", async function (req, res) {
   let password: string = req.body.password as string;
   try {
     const resp = await FindUser(email, password);
-    if (resp != undefined && resp > 0) {
-      var token = jwt.sign(resp, secretKey);
-      res.send({ Token: "Bearer:" + token });
+    if (resp != undefined) {
+      var token = jwt.sign(resp.Id, secretKey);
+      res.send({ Token: "Bearer:" + token, userName: resp.username });
     } else {
       res.send({ Error: "User Credentials Invalid" });
     }

@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [useremail, SetUserEmail] = useState("");
   const [Password, SetUserPassword] = useState("");
-  console.log(Password);
+  const navigate = useNavigate();
   async function LoginUser() {
     const res = await axios.post("http://localhost:3000/login", {
       email: useremail.toLowerCase(),
@@ -12,7 +13,8 @@ export default function Login() {
     });
     const resdataArr = res.data.Token.split(":");
     localStorage.setItem("Token", resdataArr[1]);
-    console.log(localStorage.getItem("Token"));
+    localStorage.setItem("userName", res.data.userName);
+    navigate("/");
   }
   return (
     <>
