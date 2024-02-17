@@ -15,7 +15,7 @@ export async function InsertUser(user: User) {
     data: {
       username: user.username,
       password: user.password,
-      email: user.email,
+      email: user.email.toLowerCase(),
       Name: user.Name,
       MobileNo: user.MobileNo,
     },
@@ -30,13 +30,12 @@ export async function DeleteUsers() {
 }
 export async function ReadUsers() {
   const res = await prisma.user.findMany();
-  console.log(res);
   return res;
 }
-export async function FindUser(username: string, password: string) {
+export async function FindUser(email: string, password: string) {
   try {
     const res = await prisma.user.findFirst({
-      where: { username, password },
+      where: { email, password },
       select: { Id: true },
     });
     if (res != undefined) {

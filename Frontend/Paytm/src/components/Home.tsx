@@ -1,7 +1,8 @@
+import NavBar from "./Child Components/NavBar";
 export default function HomeComponent() {
   return (
     <>
-      <h3>This is Home Component</h3>
+      <NavBar />
     </>
   );
 }

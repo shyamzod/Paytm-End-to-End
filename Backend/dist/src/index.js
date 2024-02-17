@@ -18,7 +18,7 @@ function InsertUser(user) {
             data: {
                 username: user.username,
                 password: user.password,
-                email: user.email,
+                email: user.email.toLowerCase(),
                 Name: user.Name,
                 MobileNo: user.MobileNo,
             },
@@ -39,16 +39,15 @@ exports.DeleteUsers = DeleteUsers;
 function ReadUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         const res = yield prisma.user.findMany();
-        console.log(res);
         return res;
     });
 }
 exports.ReadUsers = ReadUsers;
-function FindUser(username, password) {
+function FindUser(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const res = yield prisma.user.findFirst({
-                where: { username, password },
+                where: { email, password },
                 select: { Id: true },
             });
             if (res != undefined) {
