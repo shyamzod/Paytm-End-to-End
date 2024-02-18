@@ -53,7 +53,16 @@ export async function AddUsertoUserBalance(userbalance: UserBalance) {
   await prisma.userBalance.create({
     data: {
       UserId: userbalance.userId,
-      Amount: userbalance.Balance.toFixed(2),
+      Amount: userbalance.Balance,
     },
   });
+}
+export async function GetAllUsersWithBalance() {
+  const users = await prisma.user.findMany({
+    select: {
+      username: true,
+      UserBalance: true,
+    },
+  });
+  return users;
 }

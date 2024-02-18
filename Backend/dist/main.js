@@ -35,7 +35,7 @@ app.post("/signup", function (req, res) {
             const usersignup = req.body;
             const resp = yield (0, index_1.InsertUser)(usersignup);
             if (resp.Id > 0) {
-                yield (0, index_1.AddUsertoUserBalance)({ userId: resp.Id, Balance: 0.0 });
+                yield (0, index_1.AddUsertoUserBalance)({ userId: resp.Id, Balance: 5000.0 });
                 res.send({ userid: resp.Id, Message: "User Created Successfully" });
             }
             else {
@@ -63,6 +63,12 @@ app.post("/login", function (req, res) {
             }
         }
         catch (e) { }
+    });
+});
+app.get("/userswithbalance", function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const resp = yield (0, index_1.GetAllUsersWithBalance)();
+        res.send(JSON.stringify(resp));
     });
 });
 app.get("/readusers", function (req, res) {

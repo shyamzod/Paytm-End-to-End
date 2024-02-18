@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AddUsertoUserBalance = exports.FindUser = exports.ReadUsers = exports.DeleteUsers = exports.InsertUser = void 0;
+exports.GetAllUsersWithBalance = exports.AddUsertoUserBalance = exports.FindUser = exports.ReadUsers = exports.DeleteUsers = exports.InsertUser = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 function InsertUser(user) {
@@ -31,7 +31,12 @@ function InsertUser(user) {
 exports.InsertUser = InsertUser;
 function DeleteUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield prisma.user.deleteMany();
+        try {
+            yield prisma.user.deleteMany();
+        }
+        catch (error) {
+            console.log(error);
+        }
     });
 }
 exports.DeleteUsers = DeleteUsers;
@@ -62,9 +67,21 @@ function AddUsertoUserBalance(userbalance) {
         yield prisma.userBalance.create({
             data: {
                 UserId: userbalance.userId,
-                Amount: userbalance.Balance.toFixed(2),
+                Amount: userbalance.Balance,
             },
         });
     });
 }
 exports.AddUsertoUserBalance = AddUsertoUserBalance;
+function GetAllUsersWithBalance() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const users = yield prisma.user.findMany({
+            select: {
+                username: true,
+                UserBalance: true,
+            },
+        });
+        return users;
+    });
+}
+exports.GetAllUsersWithBalance = GetAllUsersWithBalance;

@@ -4,9 +4,11 @@ import {
   ReadUsers,
   FindUser,
   AddUsertoUserBalance,
+  GetAllUsersWithBalance,
 } from "./src/index";
 import express from "express";
 import { User } from "./src/index";
+import { json } from "stream/consumers";
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const secretKey = "pass123";
@@ -25,7 +27,7 @@ app.post("/signup", async function (req, res) {
     const usersignup: User = req.body;
     const resp = await InsertUser(usersignup);
     if (resp.Id > 0) {
-      await AddUsertoUserBalance({ userId: resp.Id, Balance: 0.0 });
+      await AddUsertoUserBalance({ userId: resp.Id, Balance: 5000.0 });
       res.send({ userid: resp.Id, Message: "User Created Successfully" });
     } else {
       console.log(resp);
@@ -47,6 +49,10 @@ app.post("/login", async function (req, res) {
       res.send({ Error: "User Credentials Invalid" });
     }
   } catch (e) {}
+});
+app.get("/userswithbalance", async function (req, res) {
+  const resp = await GetAllUsersWithBalance();
+  res.send(JSON.stringify(resp));
 });
 app.get("/readusers", async function (req, res) {
   const data = await ReadUsers();
