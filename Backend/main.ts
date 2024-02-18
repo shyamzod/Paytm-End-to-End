@@ -1,4 +1,10 @@
-import { InsertUser, DeleteUsers, ReadUsers, FindUser } from "./src/index";
+import {
+  InsertUser,
+  DeleteUsers,
+  ReadUsers,
+  FindUser,
+  AddUsertoUserBalance,
+} from "./src/index";
 import express from "express";
 import { User } from "./src/index";
 const cors = require("cors");
@@ -19,6 +25,7 @@ app.post("/signup", async function (req, res) {
     const usersignup: User = req.body;
     const resp = await InsertUser(usersignup);
     if (resp.Id > 0) {
+      await AddUsertoUserBalance({ userId: resp.Id, Balance: 0.0 });
       res.send({ userid: resp.Id, Message: "User Created Successfully" });
     } else {
       console.log(resp);

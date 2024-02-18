@@ -10,20 +10,23 @@ datasource db {
   url      = "postgresql://shyamzod03:bPQIG5TX0Rtp@ep-steep-bonus-a54fkmxr.us-east-2.aws.neon.tech/neondb?sslmode=require"
 }
 
-model User{
-  Id Int @id @default(autoincrement())
-  email String @unique
-  username String @unique 
+model User {
+  Id       Int      @id @default(autoincrement())
+  email    String   @unique
+  username String   @unique 
   password String
-  MobileNo String @unique
+  MobileNo String   @unique
+  UserBalance UserBalance?
+}
+
+model UserBalance {
+  UserId Int      @unique
+  Amount Decimal
+  User   User?    @relation(fields: [UserId], references: [Id],onDelete: Cascade)
 }
 model Transactions{
   TransactionId Int @unique @default(autoincrement())
   From Int
   To Int
-  Amount Decimal
-}
-model UserBalance{
-  UserId Int @unique
   Amount Decimal
 }

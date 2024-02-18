@@ -35,6 +35,7 @@ app.post("/signup", function (req, res) {
             const usersignup = req.body;
             const resp = yield (0, index_1.InsertUser)(usersignup);
             if (resp.Id > 0) {
+                yield (0, index_1.AddUsertoUserBalance)({ userId: resp.Id, Balance: 0.0 });
                 res.send({ userid: resp.Id, Message: "User Created Successfully" });
             }
             else {

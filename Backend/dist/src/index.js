@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FindUser = exports.ReadUsers = exports.DeleteUsers = exports.InsertUser = void 0;
+exports.AddUsertoUserBalance = exports.FindUser = exports.ReadUsers = exports.DeleteUsers = exports.InsertUser = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 function InsertUser(user) {
@@ -57,3 +57,14 @@ function FindUser(email, password) {
     });
 }
 exports.FindUser = FindUser;
+function AddUsertoUserBalance(userbalance) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield prisma.userBalance.create({
+            data: {
+                UserId: userbalance.userId,
+                Amount: userbalance.Balance.toFixed(2),
+            },
+        });
+    });
+}
+exports.AddUsertoUserBalance = AddUsertoUserBalance;

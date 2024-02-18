@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,10 @@ export interface User {
   email: string;
   MobileNo: string;
 }
-
+export interface UserBalance {
+  userId: number;
+  Balance: number;
+}
 export async function InsertUser(user: User) {
   const resp = await prisma.user.create({
     data: {
@@ -24,7 +28,11 @@ export async function InsertUser(user: User) {
   return resp;
 }
 export async function DeleteUsers() {
-  await prisma.user.deleteMany();
+  try {
+    await prisma.user.deleteMany();
+  } catch (error) {
+    console.log(error);
+  }
 }
 export async function ReadUsers() {
   const res = await prisma.user.findMany();
@@ -40,4 +48,12 @@ export async function FindUser(email: string, password: string) {
       return { Id: res.Id, username: res.username };
     }
   } catch (e) {}
+}
+export async function AddUsertoUserBalance(userbalance: UserBalance) {
+  await prisma.userBalance.create({
+    data: {
+      UserId: userbalance.userId,
+      Amount: userbalance.Balance.toFixed(2),
+    },
+  });
 }
